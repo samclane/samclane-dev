@@ -49,19 +49,3 @@ cd flask_app_project
 virtualenv venv
 source venv/bin/activate
 ```
-4. Install packages
-```
-pip install -r flask_app/requirements.txt
-```
-5. Create Flask environment variables
-```
-export FLASK_APP=flask_app/__init__.py
-export FLASK_ENV=development
-```
-6. Run it
-```
-flask run
-```
-
-## Next Steps
-- [Deploy this application on to a Production Environment](https://github.com/abalarin/Flask-on-Linode/blob/master/FlaskDeployment.md)
