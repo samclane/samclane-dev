@@ -1,9 +1,6 @@
-FROM ubuntu:16.04
+FROM python:3.7
 
 MAINTAINER Sawyer McLane "sawyer@protonmail.com"
-
-RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
 
 COPY ./flask_app/requirements.txt /flask_app/requirements.txt
 
