@@ -33,7 +33,7 @@ def register():
             flash('Password Error!', 'danger')
             return render_template('register.html')
 
-        hashed_pass = sha256_crypt.encrypt(str(passwd1))
+        hashed_pass = sha256_crypt.hash(str(passwd1))
 
         new_user = User(
             username=request.form.get('username'),
