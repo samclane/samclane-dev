@@ -3,8 +3,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 from passlib.hash import sha256_crypt
 
 from flask_app import app, db
-from flask_app.models import User, Post
 from flask_app.forms import PostForm
+from flask_app.models import User, Post
+
 
 @app.route("/")
 def index():
@@ -16,42 +17,6 @@ def index():
 @app.route("/about")
 def about():
     return render_template("index.html")
-
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-
-    if request.method == 'GET':
-        return render_template('register.html')
-
-    else:
-        # Create user object to insert into SQL
-        passwd1 = request.form.get('password1')
-        passwd2 = request.form.get('password2')
-
-        if passwd1 != passwd2 or passwd1 == None:
-            flash('Password Error!', 'danger')
-            return render_template('register.html')
-
-        hashed_pass = sha256_crypt.hash(str(passwd1))
-
-        new_user = User(
-            username=request.form.get('username'),
-            email=request.form.get('username'),
-            password=hashed_pass)
-
-        if user_exsists(new_user.username, new_user.email):
-            flash('User already exsists!', 'danger')
-            return render_template('register.html')
-        else:
-            # Insert new user into SQL
-            db.session.add(new_user)
-            db.session.commit()
-
-            login_user(new_user)
-
-            flash('Account created!', 'success')
-            return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -96,6 +61,7 @@ def user_exsists(username, email):
 
     # No matching user
     return False
+
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
