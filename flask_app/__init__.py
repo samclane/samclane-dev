@@ -10,6 +10,11 @@ with open('/etc/config.json') as config_file:
     config = json.load(config_file)
 app.config['SECRET_KEY'] = config.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY_DATABASE_URI')
+app.config['RECAPTCHA_USE_SSL'] = True
+app.config['RECAPTCHA_PUBLIC_KEY'] = config.get('RECAPTCHA_PUBLIC_KEY')
+app.config['RECAPTCHA_PRIVATE_KEY'] = config.get('RECAPTCHA_PRIVATE_KEY')
+app.config['RECAPTCHA_OPTIONS'] = {'theme': 'black'}
+
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)

@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from passlib.hash import sha256_crypt
 
 from flask_app import app, db
-from flask_app.forms import PostForm
+from flask_app.forms import PostForm, RegisterForm
 from flask_app.models import User, Post
 
 
@@ -17,6 +17,37 @@ def index():
 @app.route("/about")
 def about():
     return render_template("index.html")
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        # Create user object to insert into SQL
+        passwd = form.password.data
+
+        hashed_pass = sha256_crypt.encrypt(str(passwd))
+
+        new_user = User(
+            username=form.name.data,
+            email=form.email.data,
+            password=hashed_pass)
+
+        if user_exsists(new_user.username, new_user.email):
+            flash('User already exists!', 'danger')
+            return render_template('register.html')
+        else:
+            # Insert new user into SQL
+            db.session.add(new_user)
+            db.session.commit()
+
+            login_user(new_user)
+
+            flash('Account created!', 'success')
+            return redirect(url_for('index'))
+
+    return render_template('register.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
