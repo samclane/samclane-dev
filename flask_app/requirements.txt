@@ -4,3 +4,4 @@ sqlalchemy
 flask-security
 flask-wtf
 urllib3
+Flask-Markdown

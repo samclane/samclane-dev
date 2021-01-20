@@ -4,6 +4,7 @@ import json
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flaskext.markdown import Markdown
 
 app = Flask(__name__)
 with open('/etc/config.json') as config_file:
@@ -15,6 +16,7 @@ app.config['RECAPTCHA_PUBLIC_KEY'] = config.get('RECAPTCHA_PUBLIC_KEY')
 app.config['RECAPTCHA_PRIVATE_KEY'] = config.get('RECAPTCHA_PRIVATE_KEY')
 app.config['RECAPTCHA_OPTIONS'] = {'theme': 'black'}
 
+Markdown(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
