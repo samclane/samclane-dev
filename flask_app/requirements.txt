@@ -5,3 +5,4 @@ flask-security
 flask-wtf
 urllib3
 Flask-Markdown
+flask-paginate

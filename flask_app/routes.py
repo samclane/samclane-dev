@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_paginate import Pagination, get_page_parameter
 from passlib.hash import sha256_crypt
 
 from flask_app import app, db
@@ -10,8 +11,14 @@ from flask_app.models import User, Post
 @app.route("/")
 def index():
     db.create_all()
-    posts = Post.query.all()
-    return render_template("index.html", posts=posts)
+    search = False
+    q = request.args.get('q')
+    if q:
+        search = True
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    posts = db.session.query(Post).order_by(Post.date_posted.desc()).paginate(page=page, per_page=10)
+    pagination = Pagination(page=page, total=len(Post.query.all()), record_name='posts', search=search, bs_version=4)
+    return render_template("index.html", posts=posts.items, pagination=pagination)
 
 
 @app.route("/about")
