@@ -43,7 +43,7 @@ def register():
 
         if user_exsists(new_user.username, new_user.email):
             flash('User already exists!', 'danger')
-            return render_template('register.html')
+            return render_template('register.html', form=form)
         else:
             # Insert new user into SQL
             db.session.add(new_user)
