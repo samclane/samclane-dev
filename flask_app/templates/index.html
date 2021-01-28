@@ -1,21 +1,22 @@
 {% extends 'layout.html' %}
 {% macro render_pagination(pagination, endpoint) %}
-{% block content %}
-  {{ pagination.links }}
-  {% for post in posts %}
-    <article class="media content-section">
-      <div class="media-body">
-        <div class="article-metadata">
-          <a class="mr-2" href="#">{{ post.author.username }}</a>
-          <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-        </div>
+    {% block content %}
+        {{ pagination.links }}
+        {% for post in posts %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a class="mr-2" href="#">{{ post.author.username }}</a>
+                        <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                    </div>
 
-        <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title|markdown }}</a></h2>
-        <p class="article-content">{{ post.content|markdown|truncate(360) }}</p>
-      </div>
-    </article>
-  {% endfor %}
-  {{ pagination.links }}
+                    <h2><a class="article-title"
+                           href="{{ url_for('post', post_id=post.id) }}">{{ post.title|markdown }}</a></h2>
+                    <p class="article-content">{{ post.content|markdown|truncate(360) }}</p>
+                </div>
+            </article>
+        {% endfor %}
+        {{ pagination.links }}
 
-{% endblock %}
+    {% endblock %}
 {% endmacro %}

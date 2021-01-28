@@ -1,33 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="container">
-    <form method="POST" action="{{ url_for('register') }}">
-        {{ form.csrf_token }}
-        {{ form.name.label }}
-        {{ form.name }}
-        <ul>
-            {% for error in form.name.error %}
-                <li style="color:red;">{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {{ form.password.label }}
-        {{ form.password }}
-        {% for error in form.password.error %}
+    <div class="container">
+        <form method="POST" action="{{ url_for('register') }}">
+            {{ form.csrf_token }}
+            {{ form.name.label }}
+            {{ form.name }}
             <ul>
-            <li style="color:red;">{{ error }}</li>
-        {% endfor %}
-        </ul>
-        {{ form.email.label }}
-        {{ form.email }}
-        <ul>
-            {% for error in form.email.error %}
+                {% for error in form.name.error %}
+                    <li style="color:red;">{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {{ form.password.label }}
+            {{ form.password }}
+            {% for error in form.password.error %}
+                <ul>
                 <li style="color:red;">{{ error }}</li>
             {% endfor %}
-        </ul>
-        {{ form.recaptcha }}
-        <input type="submit" value="submit">
-    </form>
-</div>
+            </ul>
+            {{ form.email.label }}
+            {{ form.email }}
+            <ul>
+                {% for error in form.email.error %}
+                    <li style="color:red;">{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {{ form.recaptcha }}
+            <input type="submit" value="submit">
+        </form>
+    </div>
 
 {% endblock content %}
