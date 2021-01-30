@@ -5,6 +5,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flaskext.markdown import Markdown
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 with open('/etc/config.json') as config_file:
@@ -18,6 +19,7 @@ app.config['RECAPTCHA_OPTIONS'] = {'theme': 'black'}
 
 Markdown(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 from flask_app import routes

@@ -12,13 +12,14 @@ from flask_app.models import User, Post
 def index():
     db.create_all()
     search = False
-    q = request.args.get('q')
-    if q:
+    tags = request.args.get('tag')
+    if tags:
         search = True
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    posts = db.session.query(Post).order_by(Post.date_posted.desc()).paginate(page=page, per_page=10)
-    pagination = Pagination(page=page, total=len(Post.query.all()), record_name='posts', search=search, bs_version=4)
-    return render_template("index.html", posts=posts.items, pagination=pagination)
+    page_num = request.args.get(get_page_parameter(), type=int, default=1)
+    post_query = db.session.query(Post).filter(True if not search else Post.tags.contains(tags)).order_by(Post.date_posted.desc())
+    paginated_posts = post_query.paginate(page=page_num, per_page=10)
+    pagination = Pagination(page=page_num, total=len(post_query.all()), record_name='posts', search=search, bs_version=4)
+    return render_template("index.html", posts=paginated_posts.items, pagination=pagination)
 
 
 @app.route("/about")
@@ -106,7 +107,7 @@ def user_exsists(username, email):
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, user_id=current_user.id)
+        post = Post(title=form.title.data, content=form.content.data, user_id=current_user.id, tags=form.tags.data)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')

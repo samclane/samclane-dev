@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask_login import UserMixin
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from flask_app import db, login_manager
 
@@ -27,6 +28,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    tags = db.Column(db.Text, default="")
 
     def __repr__(self):
         return self.id

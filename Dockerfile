@@ -14,6 +14,8 @@ COPY ./config/config.json /etc/config.json
 
 ENV FLASK_APP=.
 
+RUN flask db upgrade
+
 ENTRYPOINT [ "flask" ]
 
 CMD [ "run", "--host", "0.0.0.0" ]
