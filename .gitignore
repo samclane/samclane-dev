@@ -136,3 +136,6 @@ dmypy.json
 # Project Config Files
 config/config.json
 flask_app/site.db
+
+.env.prod
+.env.prod.db

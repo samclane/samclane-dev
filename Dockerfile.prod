@@ -1,0 +1,72 @@
+###########
+# BUILDER #
+###########
+
+# pull official base image
+FROM python:3.8.1-slim-buster as builder
+
+# set work directory
+WORKDIR /usr/src/flask_app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+# lint
+RUN pip install --upgrade pip
+#RUN pip install flake8
+COPY . /usr/src/flask_app/
+#RUN flake8 --ignore=E501,F401 .
+
+# install python dependencies
+COPY ./flask_app/requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/flask_app/wheels -r requirements.txt
+
+
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM python:3.8
+
+# create directory for the app user
+RUN mkdir -p /home/flask_app
+
+# create the app user
+RUN addgroup --system flask_app && adduser --system flask_app --ingroup flask_app
+
+# create the appropriate directories
+ENV HOME=/home
+ENV APP_HOME=/home/flask_app
+WORKDIR $APP_HOME
+
+# install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends netcat
+COPY --from=builder /usr/src/flask_app/wheels /wheels
+COPY --from=builder /usr/src/flask_app/requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+
+# copy project
+COPY . $APP_HOME
+COPY ./config/config.json /etc/config.json
+
+
+# chown all the files to the app user
+RUN chown -R flask_app:flask_app $APP_HOME
+
+# change to the app user
+USER flask_app
+
+# run entrypoint.prod.sh
+
+WORKDIR /home/flask_app
+
+ENTRYPOINT [ "gunicorn" ]
+
+CMD [ "--bind", "0.0.0.0:5000", "flask_app:app" ]

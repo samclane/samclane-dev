@@ -7,3 +7,5 @@ urllib3
 Flask-Markdown
 flask-paginate
 Flask-Migrate
+gunicorn==20.0.4
+psycopg2-binary==2.8.4
