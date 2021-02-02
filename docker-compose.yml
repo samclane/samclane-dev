@@ -2,11 +2,13 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - ./flask_app:/usr/src/app/
-    ports:
-      - 5000:5000
+      - ./flask_app:/usr/src/flask_app/
+    expose:
+      - 5000
     env_file: ./.env.dev
     depends_on:
       - db
@@ -18,5 +20,14 @@ services:
       - POSTGRES_USER=hello_flask
       - POSTGRES_PASSWORD=hello_flask
       - POSTGRES_DB=hello_flask_dev
+  nginx:
+    image: nginx:1.17-alpine
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 volumes:
   postgres_data:

@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     volumes:
-      - ./flask_app:/usr/src/app/
-    ports:
-      - 5000:5000
+      - ./flask_app:/usr/src/flask_app/
+    expose:
+      - 5000
     env_file: ./.env.prod
     depends_on:
       - db
@@ -18,5 +18,14 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - ./.env.prod.db
+  nginx:
+    image: nginx:1.17-alpine
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - 1337:80
+    depends_on:
+      - web
 volumes:
   postgres_data:

@@ -2,18 +2,21 @@ FROM python:3.8.1-slim-buster
 
 MAINTAINER Sawyer McLane "sawyer@protonmail.com"
 
-COPY ./flask_app/requirements.txt /flask_app/requirements.txt
+ENV HOME=/home
+ENV APP_HOME=/home/flask_app
 
-WORKDIR /flask_app
+COPY ./flask_app/requirements.txt /home/flask_app/requirements.txt
+
+WORKDIR /home/flask_app
 
 RUN pip install -r requirements.txt
 
-COPY ./flask_app /flask_app
+COPY . /home/flask_app
 
 COPY ./config/config.json /etc/config.json
 
-ENV FLASK_APP=.
+WORKDIR /home/flask_app
 
-ENTRYPOINT [ "flask" ]
+ENTRYPOINT [ "gunicorn" ]
 
-CMD [ "run", "--host", "0.0.0.0" ]
+CMD [ "--bind", "0.0.0.0:5000", "flask_app:app" ]
