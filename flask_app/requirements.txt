@@ -6,4 +6,5 @@ flask-wtf
 urllib3
 Flask-Markdown
 flask-paginate
+psycopg2
 Flask-Migrate
