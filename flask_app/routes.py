@@ -32,6 +32,10 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
+        if form.invite_key.data != app.config['INVITE_KEY']:
+            flash('Invalid invite key!', 'danger')
+            return render_template('register.html', form=form)
+
         # Create user object to insert into SQL
         passwd = form.password.data
 
@@ -40,9 +44,10 @@ def register():
         new_user = User(
             username=form.name.data,
             email=form.email.data,
-            password=hashed_pass)
+            password=hashed_pass
+        )
 
-        if user_exsists(new_user.username, new_user.email):
+        if user_exists(new_user.username, new_user.email):
             flash('User already exists!', 'danger')
             return render_template('register.html', form=form)
         else:
@@ -70,7 +75,7 @@ def login():
         # Query for a user with the provided username
         result = User.query.filter_by(username=username).first()
 
-        # If a user exsists and passwords match - login
+        # If a user exists and passwords match - login
         if result is not None and sha256_crypt.verify(password_candidate, result.password):
 
             # Init session vars
@@ -91,7 +96,7 @@ def logout():
 
 
 # Check if username or email are already taken
-def user_exsists(username, email):
+def user_exists(username, email):
     # Get all Users in SQL
     users = User.query.all()
     for user in users:

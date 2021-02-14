@@ -25,6 +25,13 @@
                     <li style="color:red;">{{ error }}</li>
                 {% endfor %}
             </ul>
+            {{ form.invite_key.label }}
+            {{ form.invite_key }}
+            <ul>
+                {% for error in form.invite_key.error %}
+                    <li style="color:red;">{{ error }}</li>
+                {% endfor %}
+            </ul>
             {{ form.recaptcha }}
             <input type="submit" value="submit">
         </form>

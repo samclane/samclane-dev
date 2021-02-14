@@ -13,6 +13,7 @@ class PostForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     name = StringField('Username', [DataRequired(), Length(max=255)])
+    invite_key = StringField('Invite Key', [DataRequired()])
     password = PasswordField('Password', [DataRequired(), Length(min=8)])
     email = EmailField('Email Address', [DataRequired(), Length(min=6, max=35)])
     recaptcha = RecaptchaField()

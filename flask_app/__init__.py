@@ -16,6 +16,7 @@ app.config['RECAPTCHA_USE_SSL'] = True
 app.config['RECAPTCHA_PUBLIC_KEY'] = config.get('RECAPTCHA_PUBLIC_KEY')
 app.config['RECAPTCHA_PRIVATE_KEY'] = config.get('RECAPTCHA_PRIVATE_KEY')
 app.config['RECAPTCHA_OPTIONS'] = {'theme': 'black'}
+app.config['INVITE_KEY'] = config.get('INVITE_KEY')
 
 Markdown(app)
 db = SQLAlchemy(app)
